@@ -1,0 +1,32 @@
+{
+  "name": "tutorbook-mini-crm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Telegram Mini App, bot and backend foundation for English tutoring lesson bookings.",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "dev:miniapp": "vite --host 0.0.0.0",
+    "build": "tsc -p tsconfig.node.json && vite build",
+    "start": "node dist/node/index.js",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.miniapp.json"
+  },
+  "dependencies": {
+    "@twa-dev/sdk": "^8.0.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7"
+  }
+}
