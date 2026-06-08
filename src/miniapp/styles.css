@@ -1,8 +1,8 @@
 :root {
   color: #172026;
-  background: #f4f7f9;
+  background: #f5f7f8;
   font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,33 +20,50 @@ body {
   min-height: 100vh;
 }
 
-button {
+button,
+input,
+textarea {
   font: inherit;
+}
+
+button {
   -webkit-tap-highlight-color: transparent;
 }
 
 .app-shell {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 18px;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  padding: 12px;
   background:
     linear-gradient(135deg, rgba(31, 122, 140, 0.12), transparent 34%),
-    linear-gradient(315deg, rgba(231, 111, 81, 0.1), transparent 40%),
-    #f4f7f9;
+    linear-gradient(315deg, rgba(231, 111, 81, 0.1), transparent 38%),
+    #f5f7f8;
 }
 
-.hero {
+.booking-panel {
   width: min(100%, 480px);
-  padding: 28px;
+  min-height: calc(100dvh - 24px);
+  display: flex;
+  flex-direction: column;
+  padding: 18px;
   border: 1px solid rgba(23, 32, 38, 0.08);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 18px 45px rgba(21, 32, 43, 0.08);
 }
 
-.eyebrow {
-  margin: 0 0 12px;
+.app-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.eyebrow,
+.step-heading p {
+  margin: 0;
   color: #2c7a66;
   font-size: 12px;
   font-weight: 800;
@@ -54,54 +71,413 @@ button {
   text-transform: uppercase;
 }
 
-h1 {
+h1,
+h2 {
   margin: 0;
   color: #14212b;
-  font-size: 34px;
-  line-height: 1.05;
   letter-spacing: 0;
 }
 
-.subtitle {
-  margin: 18px 0 28px;
-  color: #516270;
-  font-size: 18px;
-  line-height: 1.45;
+h1 {
+  font-size: 27px;
+  line-height: 1.08;
 }
 
-.primary-button {
+h2 {
+  font-size: 25px;
+  line-height: 1.14;
+}
+
+.step-counter {
+  flex: 0 0 auto;
+  min-width: 56px;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #edf3f5;
+  color: #38515c;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.progress-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7edf1;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #1f7a8c, #2c7a66);
+  transition: width 180ms ease;
+}
+
+.step-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 26px;
+}
+
+.step-heading {
+  display: grid;
+  gap: 8px;
+}
+
+.step-heading span,
+.info-note,
+.success-box span {
+  color: #526472;
+  font-size: 15px;
+  line-height: 1.48;
+}
+
+.step-content {
+  display: grid;
+  gap: 14px;
+}
+
+.step-footer {
+  margin-top: auto;
+}
+
+.info-note,
+.success-box,
+.alternatives {
+  padding: 14px;
+  border: 1px solid rgba(231, 111, 81, 0.22);
+  border-radius: 8px;
+  background: #fff7f3;
+}
+
+.option-list {
+  display: grid;
+  gap: 10px;
+}
+
+.choice-card,
+.date-button,
+.time-button,
+.alternative-list button {
+  border: 1px solid #dbe5ea;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #172026;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.choice-card {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  text-align: left;
+}
+
+.choice-card span:first-child {
+  display: grid;
+  gap: 5px;
+}
+
+.choice-card strong {
+  font-size: 16px;
+}
+
+.choice-card small {
+  color: #647887;
+  font-size: 14px;
+}
+
+.choice-marker {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #b7c8d0;
+  border-radius: 999px;
+}
+
+.selected {
+  border-color: #1f7a8c;
+  background: #eef9fb;
+  box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.12);
+}
+
+.selected .choice-marker {
+  border: 6px solid #1f7a8c;
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.date-button {
+  min-height: 76px;
+  display: grid;
+  align-content: center;
+  gap: 7px;
+  padding: 12px;
+  text-align: left;
+}
+
+.date-button span {
+  color: #647887;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+.date-button strong {
+  font-size: 17px;
+  text-transform: capitalize;
+}
+
+.time-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.time-button {
+  min-height: 58px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  font-weight: 800;
+}
+
+.time-button small {
+  color: #8a5660;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.time-button:disabled {
+  border-color: #e2e8eb;
+  background: #f0f3f5;
+  color: #96a5ad;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.alternatives {
+  display: grid;
+  gap: 10px;
+  background: #f8fbfc;
+  border-color: #dbe8ed;
+}
+
+.alternatives p {
+  margin: 0;
+  color: #38515c;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.alternative-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.alternative-list button {
+  min-height: 54px;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  padding: 8px;
+}
+
+.alternative-list span {
+  color: #647887;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: #334853;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  border: 1px solid #d6e1e7;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #14212b;
+  outline: none;
+  padding: 13px 14px;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color: #1f7a8c;
+  box-shadow: 0 0 0 3px rgba(31, 122, 140, 0.12);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field-error {
+  color: #bd3d2a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.summary-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.summary-item {
+  display: grid;
+  grid-template-columns: 116px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5edf1;
+}
+
+.summary-item dt {
+  color: #647887;
+  font-size: 14px;
+}
+
+.summary-item dd {
+  margin: 0;
+  color: #172026;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 10px;
+}
+
+.primary-button,
+.secondary-button {
   width: 100%;
   min-height: 52px;
-  border: 0;
   border-radius: 8px;
-  background: #1f7a8c;
-  color: #ffffff;
   font-weight: 800;
   cursor: pointer;
   transition:
     background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
     transform 160ms ease;
 }
 
-.primary-button:hover {
+.primary-button {
+  border: 0;
+  background: #1f7a8c;
+  color: #ffffff;
+}
+
+.secondary-button {
+  border: 1px solid #d4e0e6;
+  background: #ffffff;
+  color: #334853;
+}
+
+.primary-button:hover,
+.choice-card:hover,
+.date-button:hover,
+.time-button:not(:disabled):hover,
+.alternative-list button:hover {
   background: #186779;
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
-.primary-button:active {
+.secondary-button:hover {
+  border-color: #b8c8d0;
+  background: #f4f8fa;
+}
+
+.primary-button:active,
+.secondary-button:active,
+.choice-card:active,
+.date-button:active,
+.time-button:active,
+.alternative-list button:active {
   transform: translateY(0);
+}
+
+.primary-button:disabled {
+  background: #bac9d0;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.success-box {
+  display: grid;
+  gap: 5px;
+  border-color: rgba(44, 122, 102, 0.24);
+  background: #eef8f4;
+}
+
+.success-box strong {
+  color: #2c7a66;
+  font-size: 18px;
 }
 
 @media (max-width: 420px) {
   .app-shell {
-    padding: 12px;
+    padding: 10px;
   }
 
-  .hero {
-    padding: 24px;
+  .booking-panel {
+    min-height: calc(100dvh - 20px);
+    padding: 16px;
   }
 
   h1 {
-    font-size: 30px;
+    font-size: 24px;
+  }
+
+  h2 {
+    font-size: 22px;
+  }
+
+  .date-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .time-grid,
+  .alternative-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }

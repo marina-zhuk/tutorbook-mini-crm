@@ -12,7 +12,7 @@ export function getGoogleScriptUrl() {
 }
 
 export async function sendBookingToGoogleScript(
-  _payload: GoogleScriptBookingPayload
+  payload: GoogleScriptBookingPayload
 ) {
   const googleScriptUrl = getGoogleScriptUrl();
 
@@ -20,7 +20,13 @@ export async function sendBookingToGoogleScript(
     throw new Error("GOOGLE_SCRIPT_URL is not configured.");
   }
 
-  throw new Error(
-    "Google Apps Script booking sync is prepared but not implemented yet."
-  );
+  const res = await fetch(googleScriptUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    throw new Error(`Google Script responded with ${res.status}`);
+  }
 }

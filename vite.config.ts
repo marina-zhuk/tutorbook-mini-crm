@@ -6,5 +6,10 @@ export default defineConfig({
   build: {
     outDir: "dist/miniapp",
     emptyOutDir: false
+  },
+  server: {
+    proxy: {
+      "/api": "http://localhost:3001"
+    }
   }
 });

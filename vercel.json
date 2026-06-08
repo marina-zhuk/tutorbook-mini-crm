@@ -1,5 +1,9 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist/miniapp",
-  "framework": "vite"
+  "functions": {
+    "api/booking.ts": { "maxDuration": 10 },
+    "api/slots.ts":   { "maxDuration": 10 },
+    "api/bot.ts":     { "maxDuration": 10 }
+  }
 }

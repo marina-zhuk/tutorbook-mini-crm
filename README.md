@@ -1,98 +1,87 @@
 # TutorBook Mini CRM
 
-Telegram Mini App + Telegram bot + Express backend foundation for booking English tutoring lessons.
+Telegram Mini App + бот + Vercel backend для записи на занятия по английскому.
 
-## Stack
+## Стек
 
-- Node.js
-- TypeScript
-- Express
-- Telegraf
-- React
-- Vite
-- Telegram WebApp SDK
-- dotenv
+- **Frontend**: React + Vite → Vercel static
+- **API**: Vercel Serverless Functions (TypeScript)
+- **Bot**: Telegraf, Vercel webhook (prod) / polling (dev)
+- **Storage**: Google Sheets через Google Apps Script
+- **Notifications**: Telegram Bot API
 
-## Current Stage
+## Архитектура (продакшн)
 
-Initial foundation:
-
-- Express backend with health/status endpoints.
-- Telegram bot with `/start` and a Web App button.
-- React/Vite Mini App placeholder.
-- Environment variable template.
-- Google Apps Script service placeholder for future CRM sync.
-
-Not implemented yet: booking logic, Google Apps Script POST sync, payments, admin status updates.
-
-## Google Sheets Integration Note
-
-Google Sheets will be connected later through a Google Apps Script Web App URL (`GOOGLE_SCRIPT_URL`). This project does not use Google Sheets API service account authentication, `GOOGLE_SHEETS_CLIENT_EMAIL`, `GOOGLE_SHEETS_PRIVATE_KEY`, or `GOOGLE_SHEETS_SPREADSHEET_ID`.
-
-## Project Structure
-
-```txt
-src/
-  bot/       Telegram bot entrypoints and handlers
-  server/    Express backend and future service integrations
-  miniapp/   React Telegram Mini App
-  shared/    Shared types/helpers when needed
+```
+Ученик → Telegram Bot → Mini App (Vercel)
+                              ↓
+                    POST /api/booking
+                              ↓
+              ┌───────────────┴────────────────┐
+              ↓                                ↓
+      Google Sheets                   Telegram notification
+      (conflict check,                (admin gets ✅/❌ buttons)
+       save row)                              ↓
+                                  Admin taps button
+                                              ↓
+                                  POST /api/bot (webhook)
+                                              ↓
+                                  Ученик получает уведомление
 ```
 
-## Setup
+## Переменные окружения
+
+| Переменная | Назначение |
+|---|---|
+| `TELEGRAM_BOT_TOKEN` | Токен бота от BotFather |
+| `ADMIN_CHAT_ID` | Telegram chat ID преподавателя |
+| `MINIAPP_URL` | URL Mini App на Vercel |
+| `GOOGLE_SCRIPT_URL` | URL задеплоенного Google Apps Script |
+| `WEBHOOK_SECRET` | Секрет для верификации Telegram webhook |
+| `PORT` | Порт для локального Express-сервера (default: 3000) |
+
+## Google Apps Script — настройка
+
+1. Открыть [script.google.com](https://script.google.com), создать новый проект
+2. Вставить код из `google-script/Code.gs`
+3. **Развернуть** → **Новое развёртывание** → Тип: **Веб-приложение**
+   - Запускать от имени: **Меня**
+   - Доступ: **Все**
+4. Скопировать URL и вставить в `GOOGLE_SCRIPT_URL` (Vercel + `.env`)
+
+Скрипт автоматически создаёт лист «Записи» с заголовками при первой записи и проверяет конфликты слотов.
+
+## Запуск локально
 
 ```bash
 npm install
-cp .env.example .env
+cp .env.example .env   # заполнить переменные
+npm run dev            # бот (polling) + Express на PORT
+npm run dev:miniapp    # Vite dev server с proxy на localhost
 ```
 
-Fill `.env` locally with real values. Do not commit `.env` or real tokens.
-
-## Environment Variables
-
-| Variable | Purpose |
-| --- | --- |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token from BotFather. Required to start the bot. |
-| `ADMIN_CHAT_ID` | Future tutor/admin Telegram chat ID for notifications. |
-| `MINIAPP_URL` | URL opened by the Telegram Web App button. Use public HTTPS for real Telegram testing. |
-| `API_BASE_URL` | Backend API URL for the Mini App. |
-| `GOOGLE_SCRIPT_URL` | Future Google Apps Script Web App URL for saving bookings to Google Sheets. |
-
-## Run Locally
-
-Backend + bot:
+## Сборка и деплой
 
 ```bash
-npm run dev
+npm run build          # TypeScript + Vite
+vercel --prod          # деплой на Vercel
+npm run setup:webhook  # зарегистрировать Telegram webhook
 ```
 
-Mini App dev server:
+## Локальная разработка vs продакшн
 
-```bash
-npm run dev:miniapp
-```
+| | Dev (`npm run dev`) | Prod (Vercel) |
+|---|---|---|
+| Bot | Polling (Telegraf) | Webhook (`/api/bot`) |
+| API | Express `/api/booking` | Serverless `/api/booking` |
+| Slots | `GET /api/slots` → Google Script | `GET /api/slots` → Google Script |
+| Mini App | Vite dev server | Vercel static |
 
-Health checks:
+## Флоу записи
 
-```bash
-curl http://localhost:3000/health
-curl http://localhost:3000/api/status
-```
-
-If `TELEGRAM_BOT_TOKEN` is missing, the backend still starts and the bot is skipped.
-
-## Build and Start
-
-```bash
-npm run typecheck
-npm run build
-npm start
-```
-
-## Next Steps
-
-- Add Mini App booking form.
-- Add backend booking endpoint.
-- Send Telegram admin notifications.
-- POST booking data to `GOOGLE_SCRIPT_URL`.
-- Add tutor/admin status update flow.
+1. Ученик нажимает «Записаться на занятие» → открывается Mini App
+2. Выбирает тип урока, дату, время (серые = уже заняты), вводит данные
+3. Отправляет заявку → `/api/booking` проверяет конфликт в Google Sheets
+4. Если слот занят → ошибка «Это время уже занято»
+5. Иначе: строка добавлена в Sheets, преподаватель получает уведомление с кнопками
+6. Преподаватель нажимает ✅/❌ → ученик получает уведомление в Telegram
