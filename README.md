@@ -2,6 +2,14 @@
 
 Telegram Mini App + бот + Vercel backend для записи на занятия по английскому.
 
+## Live / repo
+
+- **Live demo:** https://tutorbook-mini-crm.vercel.app
+- **GitHub:** https://github.com/marina-zhuk/tutorbook-mini-crm
+- **Portfolio case:** [docs/PORTFOLIO_CASE.md](docs/PORTFOLIO_CASE.md)
+- **Client brief:** [docs/CLIENT_BRIEF.md](docs/CLIENT_BRIEF.md)
+- **Demo flow:** [docs/DEMO_FLOW.md](docs/DEMO_FLOW.md)
+
 ## Стек
 
 - **Frontend**: React + Vite → Vercel static
